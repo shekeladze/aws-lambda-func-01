@@ -1,0 +1,31 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - echo "nothing to install"
+  pre_build:
+    commands:
+      - dotnet restore ./LambdaTestFunc/LambdaTestFunc.csproj
+      - dotnet restore ./LambdaTestFunc.Tests/LambdaTestFunc.Tests.csproj
+      - dotnet test ./LambdaTestFunc.Tests/LambdaTestFunc.Tests.csproj
+  build:
+    commands:
+      # v1 - not good
+      - cd ./LambdaTestFunc
+      - dotnet lambda deploy-serverless "lambda-test-func-001-stack" -sb $BUILD_OUTPUT_BUCKET
+
+      # v2 - better way
+
+
+      #- dotnet publish ./LambdaTestFunc/LambdaTestFunc.csproj --output out/ --configuration Release
+      #- cd ./LambdaTestFunc/out
+      #- zip ../../package.zip *
+
+      
+      #- cd ./LambdaTestFunc/out
+      #- cd ./LambdaTestFunc
+      #- dotnet lambda deploy-function
+  post_build:
+    commands:
+      - echo "build completed on `date`"

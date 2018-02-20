@@ -1,0 +1,247 @@
+Description: >
+  This template creates CodeBuild, CodePipeline for Lambda function
+
+Parameters:
+  ServiceName:
+    Type: String
+    Default: TodoService
+    Description: Name for the service, used in Lambda function, and pipeline names
+
+  GitHubUser:
+    Type: String
+    Description: Your username on GitHub.
+
+  GitHubRepo:
+    Type: String
+    Default: aws-lambda-func-01
+    Description: The repo name of the sample service.
+
+  GitHubBranch:
+    Type: String
+    Default: master
+    Description: The branch of the repo to continuously deploy.
+
+  GitHubToken:
+    Type: String
+    Description: >
+      Token for the user specified above. (https://github.com/settings/tokens)
+
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterLabels:
+      ServiceName:
+        default: "Service Name"
+      GitHubUser:
+        default: "User"
+      GitHubRepo:
+        default: "Repo"
+      GitHubBranch:
+        default: "Branch"
+      GitHubToken:
+        default: "Personal Access Token"
+    ParameterGroups:
+      - Label:
+          default: GitHub Configuration
+        Parameters:
+          - ServiceName
+          - GitHubRepo
+          - GitHubBranch
+          - GitHubUser
+          - GitHubToken
+
+Resources:
+  ArtifactsBucket:
+    Type: AWS::S3::Bucket
+
+  CodeBuildServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      Path: /
+      AssumeRolePolicyDocument: |
+        {
+            "Statement": [{
+                "Effect": "Allow",
+                "Principal": { "Service": [ "codebuild.amazonaws.com" ]},
+                "Action": [ "sts:AssumeRole" ]
+            }]
+        }
+      Policies:
+        - PolicyName: root
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              # needs to be removed !!!
+              - Resource: "*"
+                Effect: Allow
+                Action: "*"
+              - Resource: "*"
+                Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+              - Resource: !Sub arn:aws:s3:::${ArtifactsBucket}/*
+                Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:PutObject
+                  - s3:GetObjectVersion
+
+  CodePipelineServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      Path: /
+      AssumeRolePolicyDocument: |
+        {
+            "Statement": [{
+                "Effect": "Allow",
+                "Principal": { "Service": [ "codepipeline.amazonaws.com" ]},
+                "Action": [ "sts:AssumeRole" ]
+            }]
+        }
+      Policies:
+        - PolicyName: root
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Resource:
+                  - !Sub arn:aws:s3:::${ArtifactsBucket}/*
+                Effect: Allow
+                Action:
+                  - s3:PutObject
+                  - s3:GetObject
+                  - s3:GetObjectVersion
+                  - s3:GetBucketVersioning
+              - Resource: "*"
+                Effect: Allow
+                Action:
+                  - codebuild:StartBuild
+                  - codebuild:BatchGetBuilds
+                  - iam:PassRole
+  CodeBuildProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+        Name: !Sub '${ServiceName}_build'
+        Description: Build project for the Lambda service
+        Artifacts:
+          Type: CODEPIPELINE
+        Environment: 
+            Type: LINUX_CONTAINER
+            ComputeType: BUILD_GENERAL1_SMALL
+            Image: aws/codebuild/dot-net:core-2.0
+            EnvironmentVariables:
+              - Name: BUILD_OUTPUT_BUCKET
+                Value: !Ref ArtifactsBucket
+        ServiceRole: !GetAtt CodeBuildServiceRole.Arn
+        Source: 
+            Type: CODEPIPELINE
+
+  # CodePipeline definition and required roles
+  CFNPipelinePolicy:
+      Type: AWS::IAM::ManagedPolicy
+      Properties:
+          Description: CloudFormation Pipeline Execution Policy
+          Path: "/"
+          PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                  Effect: Allow
+                  Action: 
+                      - 'cloudformation:CreateStack'
+                      - 'cloudformation:DescribeStacks'
+                      - 'cloudformation:DeleteStack'
+                      - 'cloudformation:UpdateStack'
+                      - 'cloudformation:CreateChangeSet'
+                      - 'cloudformation:ExecuteChangeSet'
+                      - 'cloudformation:DeleteChangeSet'
+                      - 'cloudformation:DescribeChangeSet'
+                      - 'cloudformation:SetStackPolicy'
+                      - 'cloudformation:SetStackPolicy'
+                      - 'cloudformation:ValidateTemplate'
+                      - 'codebuild:StartBuild'
+                      - 'codebuild:BatchGetBuilds'
+                  Resource: "*"
+  CloudFormationExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          Action: 
+            - 'sts:AssumeRole'
+          Effect: Allow
+          Principal:
+            Service:
+              - cloudformation.amazonaws.com
+      Path: /
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/AdministratorAccess'
+  PipelineExecutionRole:
+      Type: AWS::IAM::Role
+      Properties:
+          AssumeRolePolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Action: 
+                  - 'sts:AssumeRole'
+                  Effect: Allow
+                  Principal:
+                    Service: 
+                      - codepipeline.amazonaws.com
+          Path: /
+          ManagedPolicyArns:
+              - 'arn:aws:iam::aws:policy/AWSCodeCommitFullAccess'
+              - 'arn:aws:iam::aws:policy/AmazonS3FullAccess'
+              - !Ref CFNPipelinePolicy
+          Policies:
+              - PolicyName: CodePipelineAccess
+                PolicyDocument:
+                  Version: '2012-10-17'
+                  Statement:
+                      - Action:
+                          - 'iam:PassRole'
+                          - 'lambda:InvokeFunction'
+                          - 'lambda:ListFunctions'
+                          - 'lambda:InvokeAsyc'
+                        Effect: Allow
+                        Resource: '*'
+  
+  Pipeline:
+    Type: AWS::CodePipeline::Pipeline
+    Properties:
+      RoleArn: !GetAtt PipelineExecutionRole.Arn
+      ArtifactStore:
+        Type: S3
+        Location: !Ref ArtifactsBucket
+      Stages:
+        - Name: Source
+          Actions:
+            - Name: App
+              ActionTypeId:
+                Category: Source
+                Owner: ThirdParty
+                Version: 1
+                Provider: GitHub
+              Configuration:
+                Owner: !Ref GitHubUser
+                Repo: !Ref GitHubRepo
+                Branch: !Ref GitHubBranch
+                OAuthToken: !Ref GitHubToken
+              OutputArtifacts:
+                - Name: App
+              RunOrder: 1
+        - Name: Build
+          Actions:
+            - Name: Build
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: 1
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: !Ref CodeBuildProject
+              InputArtifacts:
+                - Name: App
+              OutputArtifacts:
+                - Name: BuildOutput
+              RunOrder: 1
