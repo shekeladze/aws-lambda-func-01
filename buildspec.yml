@@ -14,8 +14,14 @@ phases:
       # v1 - not good
       - cd ./LambdaTestFunc
       - dotnet lambda deploy-serverless "lambda-test-func-001-stack" -sb $BUILD_OUTPUT_BUCKET
+      - echo "deploy completed on `date`"
 
       # v2 - better way
+      #- dotnet publish ./LambdaTestFunc/LambdaTestFunc.csproj --output out/ --configuration Release
+      #- cd ./LambdaTestFunc/out
+      #- zip ../../package.zip *
+
+
 
 
       #- dotnet publish ./LambdaTestFunc/LambdaTestFunc.csproj --output out/ --configuration Release

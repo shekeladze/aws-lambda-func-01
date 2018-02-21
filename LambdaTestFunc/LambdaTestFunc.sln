@@ -9,7 +9,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LambdaTestFunc.Tests", "..\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{D42C1957-3A62-47FD-83EF-5B4945D42538}"
 	ProjectSection(SolutionItems) = preProject
+		..\app-sam.yaml = ..\app-sam.yaml
 		..\buildspec.yml = ..\buildspec.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_cloudFormation", "_cloudFormation", "{FD5B24E2-8A18-4C40-8283-E49B956C313B}"
+	ProjectSection(SolutionItems) = preProject
+		..\_cloudFormation\LambdaPipeline.yaml = ..\_cloudFormation\LambdaPipeline.yaml
 	EndProjectSection
 EndProject
 Global

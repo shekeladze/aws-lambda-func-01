@@ -1,0 +1,19 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Resources:
+  TimeFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: LambdaTestFunc::LambdaTestFunc.LambdaEntryPoint::FunctionHandlerAsync
+      CodeUri: 
+      Runtime: dotnetcore2.0
+	  Memory: 256
+	  Timeout: 30
+      Policies: AWSLambdaBasicExecutionRole
+      Events:
+        ApiEventSource:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: ANY
