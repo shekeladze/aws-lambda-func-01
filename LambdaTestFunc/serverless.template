@@ -20,7 +20,8 @@
             "Type": "Api",
             "Properties": {
               "Path": "/{proxy+}",
-              "Method": "ANY"
+              "Method": "ANY",
+			  "AuthorizationType": "AWS_IAM"
             }
           }
         }
