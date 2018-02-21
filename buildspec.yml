@@ -23,8 +23,6 @@ phases:
 
       #- aws s3 cp package.zip s3://$BUILD_OUTPUT_BUCKET/package.zip
 
-      - cd ../../
-
       - echo $(ls)
 
       - aws cloudformation package --template-file app-sam.yaml --s3-bucket $BUILD_OUTPUT_BUCKET --output-template-file app-output_sam.yaml
