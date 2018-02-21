@@ -12,7 +12,7 @@ Resources:
     Properties:
       Handler: LambdaTestFunc::LambdaTestFunc.LambdaEntryPoint::FunctionHandlerAsync
 	  Runtime: dotnetcore2.0
-      CodeUri: ./package.zip
+      CodeUri: /package.zip
       Memory: 128
 	  Timeout: 30
       Policies: AWSLambdaBasicExecutionRole

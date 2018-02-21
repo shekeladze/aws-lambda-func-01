@@ -264,9 +264,9 @@ Resources:
                 TemplatePath: BuiltZip::app-output_sam.yaml
                 Capabilities: CAPABILITY_IAM
                 ParameterOverrides: '{ "CodeZipUri": "nothing" }'
-                InputArtifacts:
-                    - Name: BuiltZip
-                RunOrder: 1
+              InputArtifacts:
+                - Name: BuiltZip
+              RunOrder: 1
             - Name: ExecuteChangeSet
               ActionTypeId:
                 Category: Deploy
@@ -278,7 +278,6 @@ Resources:
                 RoleArn: !GetAtt CloudFormationExecutionRole.Arn
                 StackName: !Sub '${ServiceName}-Stack'
                 ChangeSetName: !Sub '${ServiceName}-ChangeSet'
-                OutputArtifacts:
-                    - Name: !Sub '${ServiceName}BetaChangeSet'
-                RunOrder: 2
-                
+              OutputArtifacts:
+                - Name: !Sub '${ServiceName}BetaChangeSet'
+              RunOrder: 2
