@@ -12,17 +12,17 @@ phases:
   build:
     commands:
       # v1 - not good
-      - cd ./LambdaTestFunc
-      - dotnet lambda deploy-serverless "lambda-test-func-001-stack" -sb $BUILD_OUTPUT_BUCKET
-      - echo "deploy completed on `date`"
+      #- cd ./LambdaTestFunc
+      #- dotnet lambda deploy-serverless "lambda-test-func-001-stack" -sb $BUILD_OUTPUT_BUCKET
+      #- echo deploy completed on `date`
 
       # v2 - better way
-      #- dotnet publish ./LambdaTestFunc/LambdaTestFunc.csproj --output out/ --configuration Release
-      #- cd ./LambdaTestFunc/out
-      #- zip ../../package.zip *
+      - dotnet publish ./LambdaTestFunc/LambdaTestFunc.csproj --output out/ --configuration Release
+      - cd ./LambdaTestFunc/out
+      - zip ../../package.zip *
 
-
-
+      - aws cloudformation package --template-file app-sam.yaml --s3-bucket $BUILD_OUTPUT_BUCKET --output-template-file app-output_sam.yaml
+      
 
       #- dotnet publish ./LambdaTestFunc/LambdaTestFunc.csproj --output out/ --configuration Release
       #- cd ./LambdaTestFunc/out
@@ -34,4 +34,10 @@ phases:
       #- dotnet lambda deploy-function
   post_build:
     commands:
-      - echo "build completed on `date`"
+      - echo Build and test completed on `date`
+
+artifacts:
+  files:
+    - app-output_sam.yaml
+    - package.zip
+  discard-paths: yes
