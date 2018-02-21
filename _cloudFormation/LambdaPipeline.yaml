@@ -263,7 +263,7 @@ Resources:
                 ChangeSetName: !Sub '${ServiceName}-ChangeSet'
                 TemplatePath: BuiltZip::app-output_sam.yaml
                 Capabilities: CAPABILITY_IAM
-                ParameterOverrides: '{ "CodeZipUri": "???" }'
+                ParameterOverrides: '{ "CodeZipUri": "nothing" }'
                 InputArtifacts:
                     - Name: BuiltZip
                 RunOrder: 1
