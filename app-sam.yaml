@@ -12,8 +12,7 @@ Resources:
     Properties:
       Handler: LambdaTestFunc::LambdaTestFunc.LambdaEntryPoint::FunctionHandlerAsync
 	  Runtime: dotnetcore2.0
-      #CodeUri: 's3://{???}/function.zip'
-	  CodeUri: !Sub '${CodeZipUri}'
+      CodeUri: !Sub 's3://${CodeZipUri}/package.zip'
       Memory: 128
 	  Timeout: 30
       Policies: AWSLambdaBasicExecutionRole
