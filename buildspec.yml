@@ -18,11 +18,12 @@ phases:
 
       # v2 - better way
       - dotnet publish ./LambdaTestFunc/LambdaTestFunc.csproj --output out/ --configuration Release
-      - cd ./LambdaTestFunc/out
-      - zip ../../package.zip *
+      #- cd ./LambdaTestFunc/out
+      #- zip ../../package.zip *
 
       #- aws s3 cp package.zip s3://$BUILD_OUTPUT_BUCKET/package.zip
 
+      - cd ../../
       - aws cloudformation package --template-file app-sam.yaml --s3-bucket $BUILD_OUTPUT_BUCKET --output-template-file app-output_sam.yaml
       
 
@@ -41,5 +42,5 @@ phases:
 artifacts:
   files:
     - app-output_sam.yaml
-    - package.zip
+    #- package.zip
   discard-paths: yes
