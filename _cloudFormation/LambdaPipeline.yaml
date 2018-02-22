@@ -57,38 +57,36 @@ Resources:
   CodeBuildServiceRole:
     Type: AWS::IAM::Role
     Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Action:
+            - 'sts:AssumeRole'
+            Effect: Allow
+            Principal:
+              Service:
+                - codebuild.amazonaws.com
       Path: /
-      AssumeRolePolicyDocument: |
-        {
-            "Statement": [{
-                "Effect": "Allow",
-                "Principal": { "Service": [ "codebuild.amazonaws.com" ]},
-                "Action": [ "sts:AssumeRole" ]
-            }]
-        }
       Policies:
-        - PolicyName: root
+        - PolicyName: CodeBuildAccess
           PolicyDocument:
-            Version: 2012-10-17
+            Version: '2012-10-17'
             Statement:
-              # needs to be removed !!!
-              - Resource: "*"
-                Effect: Allow
-                Action: "*"
-              
-              - Resource: "*"
-                Effect: Allow
+              - Effect: Allow
+                Resource:
+                  - !Sub 'arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/codebuild/${ServiceName}_build'
+                  - !Sub 'arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/codebuild/${ServiceName}_build:*'
                 Action:
-                  - logs:CreateLogGroup
-                  - logs:CreateLogStream
-                  - logs:PutLogEvents
-              
-              - Resource: !Sub arn:aws:s3:::${ArtifactsBucket}/*
-                Effect: Allow
-                Action:
-                  - s3:GetObject
-                  - s3:PutObject
-                  - s3:GetObjectVersion
+                  - 'logs:CreateLogGroup'
+                  - 'logs:CreateLogStream'
+                  - 'logs:PutLogEvents'
+              - Effect: Allow
+                Resource:
+                  - !Sub 'arn:aws:s3:::${ArtifactsBucket}/*'
+                Action: 
+                  - 's3:GetObject'
+                  - 's3:GetObjectVersion'
+                  - 's3:PutObject'
 
   CodePipelineServiceRole:
     Type: AWS::IAM::Role
@@ -207,7 +205,6 @@ Resources:
                           - 'lambda:InvokeAsyc'
                         Effect: Allow
                         Resource: '*'
-
   
   Pipeline:
     Type: AWS::CodePipeline::Pipeline
@@ -263,7 +260,6 @@ Resources:
                 ChangeSetName: !Sub '${ServiceName}-ChangeSet'
                 TemplatePath: BuiltZip::app-sam-output.yaml
                 Capabilities: CAPABILITY_IAM
-                #ParameterOverrides: '{ "CodeZipUri": "nothing" }'
               InputArtifacts:
                 - Name: BuiltZip
               RunOrder: 1

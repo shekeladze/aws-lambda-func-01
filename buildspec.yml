@@ -33,12 +33,10 @@ phases:
 
       #- aws cloudformation package --template-file app-sam.yaml --s3-bucket $BUILD_OUTPUT_BUCKET --output-template-file app-output_sam.yaml
       
-
       #- dotnet publish ./LambdaTestFunc/LambdaTestFunc.csproj --output out/ --configuration Release
       #- cd ./LambdaTestFunc/out
       #- zip ../../package.zip *
 
-      
       #- cd ./LambdaTestFunc/out
       #- cd ./LambdaTestFunc
       #- dotnet lambda deploy-function
