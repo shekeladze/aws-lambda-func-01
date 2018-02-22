@@ -68,7 +68,26 @@
 						]}
 			}
 		}
-	}
+	},
+
+	"ApiDeployment": {
+      "Type": "AWS::ApiGateway::Deployment",
+      "DependsOn": ["ApiMethod"],
+      "Properties": {
+        "RestApiId": {"Ref": "Api"},
+        "StageName": "Prod"
+      }
+    },
+
+	"ApiStage": {
+      "Type": "AWS::ApiGateway::Stage",
+      "Properties": {
+        "DeploymentId": {"Ref": "ApiDeployment"},
+        "RestApiId": {"Ref": "Api"},
+        "StageName": "Prod"
+        
+      }
+    }
 
 
     
