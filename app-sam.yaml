@@ -17,5 +17,3 @@ Resources:
           Properties:
             Path: /{proxy+}
             Method: ANY
-            AuthorizationType: AWS_IAM
-            
