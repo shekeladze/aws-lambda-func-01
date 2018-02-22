@@ -3,7 +3,24 @@
   "Transform" : "AWS::Serverless-2016-10-31",
   "Description" : "LambdaTestFunc that uses the ASP.NET Core framework running in Amazon Lambda.",
 
+  "Parameters" : {
+    "ApiArn" : {
+      "Type" : "String",
+	  "Default" : "nothing",
+      "Description" : "ApiId"
+    }
+  },
+
   "Resources" : {
+	
+	"ApiGateway": {
+		"Type": "AWS::ApiGateway::Method",
+		"Properties":
+		{
+			"HttpMethod" : "ANY",
+            "AuthorizationType" : true
+		}
+	},
 
     "ProxyFunction" : {
 	  "Type" : "AWS::Serverless::Function",
@@ -19,16 +36,7 @@
         "MemorySize": 128,
         "Timeout": 30,
         "Role": null,
-        "Policies": [ "AWSLambdaBasicExecutionRole" ],
-        "Events": {
-          "PutResource": {
-            "Type": "Api",
-            "Properties": {
-			  "Path": "/{proxy+}",
-              "Method": "ANY"
-            }
-          }
-        }
+        "Policies": [ "AWSLambdaBasicExecutionRole" ]
       }
     }
 
