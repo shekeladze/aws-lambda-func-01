@@ -12,19 +12,11 @@
   },
 
   "Resources" : {
+
 	
-	"ApiGateway": {
-		"Type": "AWS::ApiGateway::Method",
-		"Properties":
-		{
-			"HttpMethod" : "ANY",
-            "AuthorizationType" : true
-		}
-	},
 
     "ProxyFunction" : {
 	  "Type" : "AWS::Serverless::Function",
-      
       
 	  "Properties": {
 		"FunctionName" : "ToDoLambdaFunc",
@@ -38,7 +30,45 @@
         "Role": null,
         "Policies": [ "AWSLambdaBasicExecutionRole" ]
       }
-    }
+    },
+
+
+
+
+	"Api": {
+		"Type": "AWS::ApiGateway::RestApi",
+		"Properties": {
+			"Name" : "SomeProxy"
+		}
+	},
+
+	"ApiResource": {
+		"Type": "AWS::ApiGateway::Resource",
+		"Properties":
+		{
+			"ParentId": {"Fn::GetAtt" : [ "Api", "RootResourceId"]},
+            "RestApiId" : { "Ref" : "Api" },
+            "PathPart" : "{proxy+}"
+		}
+	},
+	
+	"ApiMethod": {
+		"Type": "AWS::ApiGateway::Method",
+		"Properties":
+		{
+			"HttpMethod" : "ANY",
+			"ResourceId": {"Fn::GetAtt" : [ "Api", "RootResourceId"]},
+			"RestApiId": { "Ref" : "Api" },
+			"AuthorizationType" : "AWS_API",
+            "Integration" : {
+				"Type" : "AWS_PROXY",
+                "Uri" : {"Fn::Join": ["",
+							["arn:aws:apigateway:", {"Ref": "AWS::Region"}, ":lambda:path/2015-03-31/functions/", {"Fn::GetAtt": ["ProxyFunction", "Arn"]}, "/invocations"]
+						]}
+			}
+		}
+	}
+
 
     
   }
