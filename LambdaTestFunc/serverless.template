@@ -1,14 +1,19 @@
 {
   "AWSTemplateFormatVersion" : "2010-09-09",
   "Transform" : "AWS::Serverless-2016-10-31",
-  "Description" : "An AWS Serverless Application that uses the ASP.NET Core framework running in Amazon Lambda.",
+  "Description" : "LambdaTestFunc that uses the ASP.NET Core framework running in Amazon Lambda.",
 
   "Resources" : {
 
     "ProxyFunction" : {
-      "Type" : "AWS::Serverless::Function",
-      "Properties": {
-        "Handler": "LambdaTestFunc::LambdaTestFunc.LambdaEntryPoint::FunctionHandlerAsync",
+	  "Type" : "AWS::Serverless::Function",
+      
+      
+	  "Properties": {
+		"FunctionName" : "ToDoLambdaFunc",
+        "Description" : "Todo serverless lambda function",
+        
+		"Handler": "LambdaTestFunc::LambdaTestFunc.LambdaEntryPoint::FunctionHandlerAsync",
         "Runtime": "dotnetcore2.0",
         "CodeUri": "",
         "MemorySize": 128,
@@ -19,13 +24,16 @@
           "PutResource": {
             "Type": "Api",
             "Properties": {
-              "Path": "/{proxy+}",
-              "Method": "ANY"
+			  "Path": "/{proxy+}",
+              "Method": "ANY",
+			  "AuthorizationType": "NONE"
             }
           }
         }
       }
     }
+
+    
   },
 
   "Outputs" : {
