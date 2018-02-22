@@ -4,16 +4,18 @@ Transform: AWS::Serverless-2016-10-31
 Resources:
   ProxyFunction:
     Type: AWS::Serverless::Function
-	Properties:
-	  Handler: LambdaTestFunc::LambdaTestFunc.LambdaEntryPoint::FunctionHandlerAsync
-	  Runtime: dotnetcore2.0
-	  CodeUri: LambdaTestFunc/out/
-	  Memory: 128
-	  Timeout: 30
-	  Policies: AWSLambdaBasicExecutionRole
-	  Events:
-	    ApiEventSource:
-		  Type: Api
-		    Properties:
-			  Path: /{proxy+}
-			  Method: ANY
+    Properties:
+      Handler: LambdaTestFunc::LambdaTestFunc.LambdaEntryPoint::FunctionHandlerAsync
+      Runtime: dotnetcore2.0
+      CodeUri: LambdaTestFunc/out/
+      Memory: 128
+      Timeout: 30
+      Policies: AWSLambdaBasicExecutionRole
+      Events:
+        ApiEventSource:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: ANY
+            AuthorizationType: AWS_IAM
+            

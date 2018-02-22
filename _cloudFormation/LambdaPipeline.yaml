@@ -261,7 +261,7 @@ Resources:
                 RoleArn: !GetAtt CloudFormationExecutionRole.Arn
                 StackName: !Sub '${ServiceName}-Stack'
                 ChangeSetName: !Sub '${ServiceName}-ChangeSet'
-                TemplatePath: BuiltZip::transformed.template
+                TemplatePath: BuiltZip::app-sam-output.yaml
                 Capabilities: CAPABILITY_IAM
                 #ParameterOverrides: '{ "CodeZipUri": "nothing" }'
               InputArtifacts:
