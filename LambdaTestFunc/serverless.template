@@ -64,7 +64,8 @@
 				"Type" : "AWS_PROXY",
                 "Uri" : {"Fn::Join": ["",
 							["arn:aws:apigateway:", {"Ref": "AWS::Region"}, ":lambda:path/2015-03-31/functions/", {"Fn::GetAtt": ["ProxyFunction", "Arn"]}, "/invocations"]
-						]}
+						]},
+				"IntegrationHttpMethod": "ANY"
 			}
 		}
 	}
