@@ -75,7 +75,7 @@
       "DependsOn": ["ApiMethod"],
       "Properties": {
         "RestApiId": {"Ref": "Api"},
-        "StageName": "Prod"
+        "StageName": "DummyStage"
       }
     },
 
@@ -84,7 +84,7 @@
       "Properties": {
         "DeploymentId": {"Ref": "ApiDeployment"},
         "RestApiId": {"Ref": "Api"},
-        "StageName": "Prod"
+        "StageName": "LATEST"
       }
     }
 
