@@ -21,6 +21,8 @@ phases:
       - dotnet lambda package-ci --s3-bucket $BUILD_OUTPUT_BUCKET --output-template ../transformed.template
 
 
+      # usefull commands
+
       #- dotnet publish ./LambdaTestFunc/LambdaTestFunc.csproj --output out/ --configuration Release
       #- cd ./LambdaTestFunc/out
       #- zip ../../package.zip *
