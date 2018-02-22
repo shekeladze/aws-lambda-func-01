@@ -38,7 +38,7 @@
 	"Api": {
 		"Type": "AWS::ApiGateway::RestApi",
 		"Properties": {
-			"Name" : "SomeProxy"
+			"Name" : "ToDoLambdaFuncApi"
 		}
 	},
 
@@ -75,7 +75,7 @@
       "DependsOn": ["ApiMethod"],
       "Properties": {
         "RestApiId": {"Ref": "Api"},
-        "StageName": "Prod"
+        "StageName": { "Ref" : "ApiStage" }
       }
     },
 
@@ -84,7 +84,7 @@
       "Properties": {
         "DeploymentId": {"Ref": "ApiDeployment"},
         "RestApiId": {"Ref": "Api"},
-        "StageName": "Prod"
+        "StageName": "Prod_1"
         
       }
     }
