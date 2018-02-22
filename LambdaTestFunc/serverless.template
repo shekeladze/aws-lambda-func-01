@@ -57,15 +57,15 @@
 		"Properties":
 		{
 			"HttpMethod" : "ANY",
-			"ResourceId": {"Fn::GetAtt" : [ "Api", "RootResourceId"]},
+			"ResourceId": { "Ref" : "ApiResource" },
 			"RestApiId": { "Ref" : "Api" },
 			"AuthorizationType" : "AWS_IAM",
             "Integration" : {
+				"IntegrationHttpMethod": "ANY",
 				"Type" : "AWS_PROXY",
                 "Uri" : {"Fn::Join": ["",
 							["arn:aws:apigateway:", {"Ref": "AWS::Region"}, ":lambda:path/2015-03-31/functions/", {"Fn::GetAtt": ["ProxyFunction", "Arn"]}, "/invocations"]
-						]},
-				"IntegrationHttpMethod": "ANY"
+						]}
 			}
 		}
 	}
