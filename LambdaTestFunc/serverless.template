@@ -59,7 +59,7 @@
 			"HttpMethod" : "ANY",
 			"ResourceId": {"Fn::GetAtt" : [ "Api", "RootResourceId"]},
 			"RestApiId": { "Ref" : "Api" },
-			"AuthorizationType" : "AWS_API",
+			"AuthorizationType" : "AWS_IAM",
             "Integration" : {
 				"Type" : "AWS_PROXY",
                 "Uri" : {"Fn::Join": ["",
