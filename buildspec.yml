@@ -18,7 +18,7 @@ phases:
 
       # v2 - better way
       - cd ./LambdaTestFunc
-      - dotnet lambda package-ci --s3-bucket $BUILD_OUTPUT_BUCKET --output-template ../transformed.template
+      - dotnet lambda package-ci --template ../app-sam.yaml --s3-bucket $BUILD_OUTPUT_BUCKET --output-template ../transformed.template
 
 
       # usefull commands
