@@ -18,7 +18,8 @@ phases:
 
       # v2 - better way
       - cd ./LambdaTestFunc
-      - dotnet lambda package-ci --template ../app-sam.yaml --s3-bucket $BUILD_OUTPUT_BUCKET --output-template ../app-sam-output.yaml
+      #- dotnet lambda package-ci --template ../app-sam.yaml --s3-bucket $BUILD_OUTPUT_BUCKET --output-template ../app-sam-output.yaml
+      - dotnet lambda package-ci --s3-bucket $BUILD_OUTPUT_BUCKET --output-template ../serverless-out.template
 
 
       # usefull commands
@@ -46,7 +47,7 @@ phases:
 
 artifacts:
   files:
-    - app-sam-output.yaml
-    #- transformed.template
+    - serverless-out.template
+    #- app-sam-output.yaml
     #- package.zip
   discard-paths: yes
