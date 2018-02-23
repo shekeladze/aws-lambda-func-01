@@ -4,7 +4,7 @@
   "Description" : "LambdaTestFunc that uses the ASP.NET Core framework running in Amazon Lambda.",
 
   "Parameters" : {
-    "ApiArn" : {
+    "Version" : {
       "Type" : "String",
 	  "Default" : "nothing",
       "Description" : "ApiId"
