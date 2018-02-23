@@ -33,8 +33,6 @@
     },
 
 
-
-
 	"Api": {
 		"Type": "AWS::ApiGateway::RestApi",
 		"Properties": {
@@ -121,22 +119,22 @@
 		}
 	},
 
-	"ApiDeployment": {
-      "Type": "AWS::ApiGateway::Deployment",
-      "DependsOn": ["ApiMethod"],
-      "Properties": {
-        "RestApiId": {"Ref": "Api"},
-        "StageName": "DummyStage"
-      }
-    },
-
 	"ApiStage": {
 	  "DependsOn": ["ApiGatewayAccount"],
       "Type": "AWS::ApiGateway::Stage",
       "Properties": {
         "DeploymentId": {"Ref": "ApiDeployment"},
         "RestApiId": {"Ref": "Api"},
-        "StageName": "LATEST"
+        "StageName": "Prod"
+      }
+    },
+
+	"ApiDeployment": {
+      "Type": "AWS::ApiGateway::Deployment",
+      "DependsOn": ["ApiMethod"],
+      "Properties": {
+        "RestApiId": {"Ref": "Api"},
+        "StageName": "Prod"
       }
     }
     
