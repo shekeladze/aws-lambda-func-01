@@ -112,8 +112,8 @@
 			"RestApiId": { "Ref" : "Api" },
 			"AuthorizationType" : "AWS_IAM",
             "Integration" : {
-				"IntegrationHttpMethod": "ANY",
 				"Type" : "AWS_PROXY",
+				"IntegrationHttpMethod": "ANY",
                 "Uri" : {"Fn::Join": ["",
 							["arn:aws:apigateway:", {"Ref": "AWS::Region"}, ":lambda:path/2015-03-31/functions/", {"Fn::GetAtt": ["ProxyFunction", "Arn"]}, "/invocations"]
 						]}

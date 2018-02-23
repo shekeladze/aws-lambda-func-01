@@ -8,8 +8,8 @@
     "ProxyFunction" : {
       "Type" : "AWS::Serverless::Function",
       "Properties": {
-		"FunctionName" : "ToDoLambdaFunc",
-        "Description" : "Todo serverless lambda function",
+		"FunctionName" : "ToDoLambdaFunc-simple",
+        "Description" : "Todo serverless lambda simple function",
 
         "Handler": "LambdaTestFunc::LambdaTestFunc.LambdaEntryPoint::FunctionHandlerAsync",
         "Runtime": "dotnetcore2.0",
