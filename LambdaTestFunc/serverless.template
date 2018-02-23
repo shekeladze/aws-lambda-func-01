@@ -48,7 +48,7 @@
 		{
 			"ParentId": {"Fn::GetAtt" : [ "Api", "RootResourceId"]},
             "RestApiId" : { "Ref" : "Api" },
-            "PathPart" : "/{proxy+}"
+            "PathPart" : "{proxy+}"
 		}
 	},
 
