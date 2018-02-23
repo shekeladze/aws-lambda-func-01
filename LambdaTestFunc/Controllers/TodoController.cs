@@ -16,5 +16,11 @@ namespace LambdaTestFunc.Controllers
             return new string[] { "buy milk", "walk dog", "call mom", "wash car", "buy medicine", "wash hands", "brush teeth", "buy ticket", "call dad" };
         }
 
+        [HttpPost]
+        public IEnumerable<string> Post(string someData)
+        {
+            return new string[] { "posted response" };
+        }
+
     }
 }
