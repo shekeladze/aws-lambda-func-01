@@ -134,7 +134,7 @@
       "DependsOn": ["ApiMethod"],
       "Properties": {
         "RestApiId": {"Ref": "Api"},
-        "StageName": "Prod"
+        "StageName": "Dummy"
       }
     }
     
