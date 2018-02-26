@@ -13,7 +13,8 @@ namespace LambdaTestFunc.Controllers
         [HttpGet]
         public IEnumerable<string> Get()
         {   
-            return new string[] { "buy milk", "walk dog", "call mom", "wash car", "buy medicine", "wash hands", "brush teeth", "buy ticket", "call dad" };
+            return new string[] { "buy milk", "walk dog", "call mom", "wash car", "buy medicine", "wash hands", "brush teeth", "buy ticket", "call dad",
+                "use existing api" };
         }
 
         [HttpPost]
