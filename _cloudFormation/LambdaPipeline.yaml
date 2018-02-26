@@ -4,7 +4,7 @@ Description: >
 Parameters:
   ServiceName:
     Type: String
-    Default: TodoService
+    Default: Todo
     Description: Name for the service, used in Lambda function, and pipeline names
   
   GitHubUser:
@@ -19,6 +19,9 @@ Parameters:
   GitHubBranch:
     Type: String
     Default: master
+    AllowedValues:
+      - master
+      - develop
     Description: The branch of the repo to continuously deploy.
 
   GitHubToken:
@@ -42,9 +45,13 @@ Metadata:
     
     ParameterGroups:
       - Label:
-            default: GitHub Configuration
+          default: General
         Parameters:
           - ServiceName
+        
+      - Label:
+          default: GitHub Configuration
+        Parameters:
           - GitHubRepo
           - GitHubBranch
           - GitHubUser

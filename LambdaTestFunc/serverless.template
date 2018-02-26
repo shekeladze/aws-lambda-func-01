@@ -4,10 +4,15 @@
   "Description" : "LambdaTestFunc that uses the ASP.NET Core framework running in Amazon Lambda.",
 
   "Parameters" : {
-    "Version" : {
+    "ApiGatewayId" : {
       "Type" : "String",
-	  "Default" : "nothing",
-      "Description" : "ApiId"
+	  "Default" : "xxx",
+      "Description" : "Api gateway id"
+    },
+	"ApiGatewayRootResourceId" : {
+      "Type" : "String",
+	  "Default" : "xxx",
+      "Description" : "Api gateway root resource id"
     }
   },
 
@@ -137,6 +142,16 @@
         "StageName": "dummy"
       }
     }
-    
+
+  },
+
+  "Outputs" : {
+    "ApiGateId" : {
+        "Value" : { "Ref" : "Api" }
+    },
+	"RootResourceId": {
+		"Value": {"Fn::GetAtt" : [ "Api", "RootResourceId"]}
+	}
   }
+
 }
