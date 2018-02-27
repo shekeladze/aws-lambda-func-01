@@ -6,24 +6,19 @@
   "Parameters" : {
     "ApiGatewayId" : {
       "Type" : "String",
-	  "Default" : "required!",
+	  "Default" : "xxx",
       "Description" : "Api gateway id"
     },
-	
 	"ApiGatewayRootResourceId" : {
       "Type" : "String",
-	  "Default" : "required!",
+	  "Default" : "xxx",
       "Description" : "Api gateway root resource id"
-    },
-
-	"RootResourcePath" : {
-      "Type" : "String",
-	  "Default" : "required!",
-      "Description" : "resource root path (e.g. logging, directdebit)"
     }
   },
 
   "Resources" : {
+
+	
 
     "ProxyFunction" : {
 	  "Type" : "AWS::Serverless::Function",
@@ -42,13 +37,11 @@
       }
     },
 
-	"ApiRootResource": {
-		"Type": "AWS::ApiGateway::Resource",
-		"Properties":
-		{
-			"ParentId": { "Ref" : "ApiGatewayRootResourceId" },
-            "RestApiId" : { "Ref" : "ApiGatewayId" },
-            "PathPart" : { "Ref" : "RootResourcePath" }
+
+	"Api": {
+		"Type": "AWS::ApiGateway::RestApi",
+		"Properties": {
+			"Name" : "ToDoLambdaFuncApi"
 		}
 	},
 
@@ -56,8 +49,8 @@
 		"Type": "AWS::ApiGateway::Resource",
 		"Properties":
 		{
-			"ParentId": { "Ref" : "ApiRootResource" },
-            "RestApiId" : { "Ref" : "ApiGatewayId" },
+			"ParentId": {"Fn::GetAtt" : [ "Api", "RootResourceId"]},
+            "RestApiId" : { "Ref" : "Api" },
             "PathPart" : "{proxy+}"
 		}
 	},
@@ -119,7 +112,7 @@
 		{
 			"HttpMethod" : "ANY",
 			"ResourceId": { "Ref" : "ApiResource" },
-			"RestApiId": { "Ref" : "ApiGatewayId" },
+			"RestApiId": { "Ref" : "Api" },
 			"AuthorizationType" : "AWS_IAM",
             "Integration" : {
 				"Type" : "AWS_PROXY",
@@ -131,12 +124,22 @@
 		}
 	},
 
+	"ApiStage": {
+	  "DependsOn": ["ApiGatewayAccount"],
+      "Type": "AWS::ApiGateway::Stage",
+      "Properties": {
+        "DeploymentId": {"Ref": "ApiDeployment"},
+        "RestApiId": {"Ref": "Api"},
+        "StageName": "prod"
+      }
+    },
+
 	"ApiDeployment": {
       "Type": "AWS::ApiGateway::Deployment",
       "DependsOn": ["ApiMethod"],
       "Properties": {
-        "RestApiId": { "Ref" : "ApiGatewayId" },
-        "StageName": "prod"
+        "RestApiId": {"Ref": "Api"},
+        "StageName": "dummy"
       }
     }
 

@@ -28,6 +28,18 @@ Parameters:
     Type: String
     Description: >
         Token for the user specified above. (https://github.com/settings/tokens)
+  
+  ApiGatewayId:
+    Type: String
+    Description: Existsing api gateway id.
+    
+  ApiGatewayRootResourceId:
+    Type: String
+    Description: Existsing api gateway root resource id.
+  
+  RootResourcePath:
+    Type: String
+    Description: Root path for new resource in existing api gateway.
 
 Metadata:
   AWS::CloudFormation::Interface:
@@ -56,6 +68,13 @@ Metadata:
           - GitHubBranch
           - GitHubUser
           - GitHubToken
+      
+      - Label:
+          default: API Gateway
+        Parameters:
+          - ApiGatewayId
+          - ApiGatewayRootResourceId
+          - RootResourcePath
 
 Resources:
   ArtifactsBucket:
@@ -264,6 +283,7 @@ Resources:
                 ChangeSetName: !Sub '${ServiceName}-ApiLambda-ChangeSet'
                 TemplatePath: BuiltZip::serverless-out.template
                 Capabilities: CAPABILITY_IAM
+                ParameterOverrides: !Sub '{ "ApiGatewayId": "${ApiGatewayId}", "ApiGatewayRootResourceId": "${ApiGatewayRootResourceId}", "RootResourcePath": "${RootResourcePath}" }'
               InputArtifacts:
                 - Name: BuiltZip
               RunOrder: 1
