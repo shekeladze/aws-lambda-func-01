@@ -120,7 +120,7 @@
 			"HttpMethod" : "ANY",
 			"ResourceId": { "Ref" : "ApiResource" },
 			"RestApiId": { "Ref" : "ApiGatewayId" },
-			"AuthorizationType" : "AWS_IAM",
+			"AuthorizationType" : "NONE",
             "Integration" : {
 				"Type" : "AWS_PROXY",
 				"IntegrationHttpMethod": "POST",
