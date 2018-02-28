@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using LambdaTestFunc.Code;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
@@ -36,8 +37,6 @@ namespace LambdaTestFunc.Controllers
         public IActionResult EnvTest()
         {
             const string CACHED_DATA = "CACHED_DATA";
-
-            var envVar = Environment.GetEnvironmentVariable("SOME_VAR");
             
             string cachedStr;
             var readFromCache = _cache.TryGetValue(CACHED_DATA, out cachedStr);
@@ -56,7 +55,22 @@ namespace LambdaTestFunc.Controllers
                 _cache.Set(CACHED_DATA, cachedStr, DateTime.Now.AddMinutes(30));
             }
 
-            return Ok(new { readFromCache, cachedValue = cachedStr });
+            bool gotFromStatic = false;
+            string cachedStr2 = string.Empty;
+            if (!String.IsNullOrEmpty(StaticCache.ConnStr))
+            {
+                gotFromStatic = true;
+                cachedStr2 = StaticCache.ConnStr;
+            }
+            else
+            {
+                var envVar = Environment.GetEnvironmentVariable("SOME_VAR");
+                cachedStr2 = envVar + "_additional_data";
+                StaticCache.ConnStr = cachedStr2;
+            }
+            
+            //return Ok(new { readFromCache, cachedValue = cachedStr });
+            return Ok(new { gotFromStatic, cachedValue = cachedStr2 });
         }
 
     }
