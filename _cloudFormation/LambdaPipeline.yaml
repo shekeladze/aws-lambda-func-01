@@ -31,15 +31,18 @@ Parameters:
   
   ApiGatewayId:
     Type: String
+    Default: k29sbrze5c
     Description: Existsing api gateway id.
     
   ApiGatewayRootResourceId:
     Type: String
+    Default: aglmrp5uo1
     Description: Existsing api gateway root resource id.
   
   RootResourcePath:
     Type: String
-    Description: Root path for new resource in existing api gateway.
+    Default: todo
+    Description: Root path for new resource in existing api gateway (e.g. todo, logging, directdebit).
 
 Metadata:
   AWS::CloudFormation::Interface:
@@ -54,6 +57,12 @@ Metadata:
         default: "Branch"
       GitHubToken:
         default: "Personal Access Token"
+      ApiGatewayId:
+        default: "API Gateway Id"
+      ApiGatewayRootResourceId:
+        default: "API Gateway's root resource id"
+      RootResourcePath:
+        default: "Root resource path"
     
     ParameterGroups:
       - Label:
