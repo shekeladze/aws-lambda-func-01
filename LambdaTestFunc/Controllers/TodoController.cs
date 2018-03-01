@@ -79,7 +79,8 @@ namespace LambdaTestFunc.Controllers
         public ActionResult GetPara()
         {
             GetParameterResponse res = null;
-
+            
+            DateTime dt = DateTime.Now;
             using (var client = new AmazonSimpleSystemsManagementClient())
             {
                 res = client.GetParameterAsync(new GetParameterRequest()
@@ -88,8 +89,9 @@ namespace LambdaTestFunc.Controllers
                     WithDecryption = true
                 }).Result;
             }
+            TimeSpan ts = DateTime.Now - dt;
 
-            return Ok(res);
+            return Ok(new { res = res, duration = ts.Milliseconds });
         }
 
     }
