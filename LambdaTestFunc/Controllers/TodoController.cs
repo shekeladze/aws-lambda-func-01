@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Amazon.SimpleSystemsManagement;
+using Amazon.SimpleSystemsManagement.Model;
 using LambdaTestFunc.Code;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -22,7 +24,7 @@ namespace LambdaTestFunc.Controllers
 
         [HttpGet]
         public IEnumerable<string> Get()
-        {   
+        {
             return new string[] { "buy milk", "walk dog", "call mom", "wash car", "buy medicine", "wash hands", "brush teeth", "buy ticket", "call dad",
                 "use existing api" };
         }
@@ -37,7 +39,7 @@ namespace LambdaTestFunc.Controllers
         public IActionResult EnvTest()
         {
             const string CACHED_DATA = "CACHED_DATA";
-            
+
             string cachedStr;
             var readFromCache = _cache.TryGetValue(CACHED_DATA, out cachedStr);
 
@@ -68,9 +70,26 @@ namespace LambdaTestFunc.Controllers
                 cachedStr2 = envVar + "_additional_data";
                 StaticCache.ConnStr = cachedStr2;
             }
-            
+
             //return Ok(new { readFromCache, cachedValue = cachedStr });
             return Ok(new { gotFromStatic, cachedValue = cachedStr2 });
+        }
+
+        [HttpGet("GetPara")]
+        public ActionResult GetPara()
+        {
+            GetParameterResponse res = null;
+
+            using (var client = new AmazonSimpleSystemsManagementClient())
+            {
+                res = client.GetParameterAsync(new GetParameterRequest()
+                {
+                    Name = "LOGGING_SERVICE_CONNECTION_STRING_DEV",
+                    WithDecryption = true
+                }).Result;
+            }
+
+            return Ok(res);
         }
 
     }
