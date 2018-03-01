@@ -85,14 +85,13 @@ namespace LambdaTestFunc.Controllers
             {
                 res = client.GetParameterAsync(new GetParameterRequest()
                 {
-                    Name = "LOGGING_SERVICE_CONNECTION_STRING_DEV",
+                    Name = "LOGGING_SERVICE_DEV_CONNECTION_STRING",
                     WithDecryption = true
                 }).Result;
             }
             TimeSpan ts = DateTime.Now - dt;
 
-            return Ok(new { res = res, duration = ts.Milliseconds });
+            return Ok(new { res, duration = ts.Milliseconds });
         }
-
     }
 }
